@@ -2,7 +2,15 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\NewsController;
+// use App\Http\Controllers\User\CourseController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+
+
+Route::prefix("/news")->group(function() {
+  Route::get("/", [NewsController::class, "getNews"]);
+//   Route::post("/", [CourseController::class, "create_course"]);
+//   Route::get("/{id}", [CourseController::class, "get_course"]);
+//   Route::put("/{id}", [CourseController::class, "update_course"]);
+//   Route::delete("/{id}", [CourseController::class, "delete_course"]);
+});
