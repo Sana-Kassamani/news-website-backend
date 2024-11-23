@@ -23,4 +23,26 @@ class NewsController extends Controller
             "news"=> $news
         ]);
     }
+    public function createNews(Request $request){
+        $new_item_param=[
+            "title"=> $request->title,
+            "content"=> $request->content,
+            "minimum_age"=> $request->minimum_age,
+            "user_id"=> $request->user_id,
+        ];
+        foreach($new_item_param as $key => $value)
+        {
+            if (empty($value) && $value !== '0'){
+                return response()->json([
+                    "message"=> "All fields are required"
+                ],400);
+            }
+
+        }
+        $new_item=NewsItem::create($new_item);
+        return response()->json([
+            "news"=> $news
+        ]);
+    }
+
 }
