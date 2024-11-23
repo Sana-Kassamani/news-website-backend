@@ -39,9 +39,9 @@ class NewsController extends Controller
             }
 
         }
-        $new_item=NewsItem::create($new_item);
+        $new_item=NewsItem::create($new_item_param);
         return response()->json([
-            "news"=> $news
+            "news"=> $new_item
         ]);
     }
 
