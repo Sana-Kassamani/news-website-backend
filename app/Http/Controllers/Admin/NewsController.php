@@ -72,12 +72,13 @@ class NewsController extends Controller
             "content"=> $request->content ? $request->content : $existing_news->content,
             "minimum_age"=> $request->minimum_age ? $request->minimum_age : $existing_news->minimum_age,
             "user_id"=> $request->user_id ? $request->user_id : $existing_news->user_id,
+
         ];
         if($request->attachment){
         {
             $file_control= new FileController();
             try {
-                $path=$file_control->editNewsAttachment($existing_news->attachmnet_path,$request->attachment);
+                $path=$file_control->editNewsAttachment($existing_news->attachment_path,$request->attachment);
                 $item_param["attachment_path"]=$path;
             } catch (Exception $e) {
                 return response()->json([

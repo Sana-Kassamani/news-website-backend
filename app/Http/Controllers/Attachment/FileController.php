@@ -29,12 +29,19 @@ class FileController extends Controller
             throw new Exception("No attachment found at the specified path.");
         }
     }
-    public function editNewsAttachment($old_attachment_path=null,$new_attachment){
+    public function editNewsAttachment($old_attachment_path,$new_attachment=null){
         if($old_attachment_path){
             $this->deleteNewsAttachment($old_attachment_path);
         }
+        if($new_attachment){
+            $path=$this->addNewsAttachment($new_attachment);
+            return $path;
+        }
+        else{
+            return null;
+        }
        
-        $this->addNewsAttachment($new_attachment);
+        
     }
     // public function addNewsAttachment($attachment){
 
