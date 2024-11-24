@@ -5,7 +5,6 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-
 use App\Models\User;
 use App\Models\NewsItem;
 use App\Models\Article;

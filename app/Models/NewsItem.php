@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class NewsItem extends Model
 {
-   protected $fillable=["title","content","minimum_age","user_id"];
+   protected $fillable=["title","content","minimum_age","user_id","attachment_path"];
 
 }
