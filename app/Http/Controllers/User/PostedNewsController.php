@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use App\Http\Controllers\Attachment\FileController;
 use App\Models\User;
 use App\Models\NewsItem;
 use App\Models\Article;
@@ -44,6 +45,7 @@ class PostedNewsController extends Controller
         ],200);
         }
 
+
     public function post_articles(Request $request,$user_id){
 
         $new_article_param=[
@@ -59,12 +61,20 @@ class PostedNewsController extends Controller
                 ],400);
             }
         }
+
         $news_item= $this->getNewsArray($user_id)->contains("id", $request->news_item_id);
         if(!$news_item){
             return response()->json([
                 "message"=> "No news found"
             ],404);
         }
+        $attachment= $request->file('attachment');
+        if($attachment){
+            $file_control= new FileController();
+            $path= $file_control->addArticleAttachment($attachment);
+            $new_article_param["attachment_path"]=$path;
+        }
+        
         $new_article=Article::create($new_article_param);
 
         return response()->json([

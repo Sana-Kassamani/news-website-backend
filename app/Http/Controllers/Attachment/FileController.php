@@ -43,11 +43,11 @@ class FileController extends Controller
        
         
     }
-    // public function addNewsAttachment($attachment){
+    public function addArticleAttachment($attachment){
 
-    //     if(!Storage::exists("NewsAttachment")){
-    //         Storage::makeDirectory("NewsAttachment");
-    //         }
-    //     return Storage::putFile("NewsAttachment", $attachment);
-    // }
+        if(!Storage::exists("ArticleAttachment")){
+            Storage::makeDirectory("ArticleAttachment");
+            }
+        return Storage::putFile("ArticleAttachment", $attachment);
+    }
 }
