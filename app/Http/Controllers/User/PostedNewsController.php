@@ -40,14 +40,14 @@ class PostedNewsController extends Controller
         ],200);
         }
 
-    public function post_articles(Request $request){
+    public function post_articles(Request $request,$user_id){
 
         $new_article_param=[
             "content"=> $request->content,
-            "user_id"=> $request->user_id,
+            "user_id"=> $user_id,
             "news_item_id"=> $request->news_item_id,
         ];
-        foreach($new_article as $key => $value)
+        foreach($new_article_param as $key => $value)
         {
             if (empty($value) && $value !== '0'){
                 return response()->json([
@@ -55,8 +55,9 @@ class PostedNewsController extends Controller
                 ],400);
             }
         }
-        $news_item= NewsItem::find($new_article_param->news_item_id);
-        if($news_item){
+        $decoded=json_decode($this->getUsersNews($user_id))->user_news;
+        $news_item= collect($decoded)->contains("id", $request->news_item_id);
+        if(!$news_item){
             return response()->json([
                 "message"=> "No news found"
             ],404);

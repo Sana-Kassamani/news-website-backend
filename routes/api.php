@@ -18,6 +18,7 @@ Route::prefix("/admin")->group(function() {
 
 Route::prefix("/user")->group(function() {
     Route::get("/{id}", [PostedNewsController::class, "getUsersNews"]);
+    Route::post("/{id}", [PostedNewsController::class, "post_articles"]);
     // Route::post("/", [NewsController::class, "createNews"]);
     // Route::put("/{id}", [NewsController::class, "editNews"]);
     // Route::delete("/{id}", [NewsController::class, "deleteNews"]);
