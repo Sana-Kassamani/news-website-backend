@@ -12,7 +12,7 @@ class NewsController extends Controller
 {
     public function getNews(){
         $news = NewsItem::all();
-        if($news)
+        if(!$news)
         {
             return response()->json([
                 "message"=> "No news yet"
@@ -23,6 +23,8 @@ class NewsController extends Controller
             "news"=> $news
         ]);
     }
+
+
     public function createNews(Request $request){
         $new_item_param=[
             "title"=> $request->title,
@@ -44,38 +46,27 @@ class NewsController extends Controller
             "news"=> $new_item
         ]);
     }
+
     public function editNews(Request $request,$id){
-        $existing_news=NewsItem::find($id)->update([
-            "title"=> $request->title ,
-            "content"=> $request->content,
-            "minimum_age"=> $request->minimum_age,
-            "user_id"=> $request->user_id,
-        ]);
-        // if(!$existing_news)
-        // {
-        //     return response()->json([
-        //         "message"=> "News Item to edit doesn't exist"
-        //     ],404);
+        $existing_news=NewsItem::find($id);
+        if(!$existing_news)
+        {
+            return response()->json([
+                "message"=> "News Item to edit doesn't exist"
+            ],404);
 
-        // }
-        // $item_param=[
-        //     "title"=> $request->title || ,
-        //     "content"=> $request->content,
-        //     "minimum_age"=> $request->minimum_age,
-        //     "user_id"=> $request->user_id,
-        // ];
-        // foreach($new_item_param as $key => $value)
-        // {
-        //     if (empty($value) && $value !== '0'){
-        //         return response()->json([
-        //             "message"=> "All fields are required"
-        //         ],400);
-        //     }
+        }
+        $item_param=[
+            "id"=> $existing_news->id,
+            "title"=> $request->title ?  $request->title : $existing_news->title ,
+            "content"=> $request->content ? $request->content : $existing_news->content,
+            "minimum_age"=> $request->minimum_age ? $request->minimum_age : $existing_news->minimum_age,
+            "user_id"=> $request->user_id ? $request->user_id : $existing_news->user_id,
+        ];
 
-        // }
-        // $new_item=NewsItem::create($new_item_param);
+        $updated_news = $existing_news->update($item_param);
         return response()->json([
-            "news"=> $existing_item
+            "updated_news"=> $existing_news
         ]);
     }
 
