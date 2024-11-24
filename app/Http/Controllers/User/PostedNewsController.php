@@ -46,7 +46,7 @@ class PostedNewsController extends Controller
         }
 
 
-    public function post_articles(Request $request,$user_id){
+    public function postArticles(Request $request,$user_id){
 
         $new_article_param=[
             "content"=> $request->content,
