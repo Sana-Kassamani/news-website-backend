@@ -12,7 +12,7 @@ use App\Models\Article;
 
 class PostedNewsController extends Controller
 {
-    public function getUsersNews($user_id){
+    public function getNewsArray($user_id){
         // ideally user_id can be derived from jwt decode
         // here provided in url
         $user=User::find($user_id);
@@ -35,6 +35,11 @@ class PostedNewsController extends Controller
         $filtered = collect($news)->filter(function (NewsItem $value, int $key) use ($user){
             return $value->minimum_age <= $user->age;
         });
+        return $filtered;
+    }
+
+    public function getUsersNews($user_id){
+        $filtered = $this->getNewsArray($user_id);
         return response()->json([
             "user_news"=> $filtered
         ],200);
@@ -55,14 +60,13 @@ class PostedNewsController extends Controller
                 ],400);
             }
         }
-        $decoded=json_decode($this->getUsersNews($user_id))->user_news;
-        $news_item= collect($decoded)->contains("id", $request->news_item_id);
+        $news_item= $this->getNewsArray($user_id)->contains("id", $request->news_item_id);
         if(!$news_item){
             return response()->json([
                 "message"=> "No news found"
             ],404);
         }
-        $new_article=NewsItem::create($new_article_param);
+        $new_article=Article::create($new_article_param);
 
         return response()->json([
             "news"=> $news_item,
