@@ -20,7 +20,7 @@ class PostedNewsController extends Controller
         {
             return response()->json([
                 "message"=> "Invalid credentials"
-            ]);
+            ],401);
         }
         //get all news in db
         $news = NewsItem::all();
@@ -28,7 +28,7 @@ class PostedNewsController extends Controller
         {
             return response()->json([
                 "message"=> "No news yet"
-            ]);
+            ],404);
 
         }
         // use collection to filter out news that are for ages above of that of user
@@ -37,7 +37,36 @@ class PostedNewsController extends Controller
         });
         return response()->json([
             "user_news"=> $filtered
-        ]);
+        ],200);
         }
+
+    public function post_articles(Request $request){
+
+        $new_article_param=[
+            "content"=> $request->content,
+            "user_id"=> $request->user_id,
+            "news_item_id"=> $request->news_item_id,
+        ];
+        foreach($new_article as $key => $value)
+        {
+            if (empty($value) && $value !== '0'){
+                return response()->json([
+                    "message"=> "All fields are required"
+                ],400);
+            }
+        }
+        $news_item= NewsItem::find($new_article_param->news_item_id);
+        if($news_item){
+            return response()->json([
+                "message"=> "No news found"
+            ],404);
+        }
+        $new_article=NewsItem::create($new_article_param);
+
+        return response()->json([
+            "news"=> $news_item,
+            "new article"=> $new_article 
+        ],200);
+    }
     
 }
