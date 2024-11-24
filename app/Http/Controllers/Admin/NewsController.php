@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Attachment\FileController;
 
 use App\Models\NewsItem;
 
@@ -31,6 +32,7 @@ class NewsController extends Controller
             "content"=> $request->content,
             "minimum_age"=> $request->minimum_age,
             "user_id"=> $request->user_id,
+            
         ];
         foreach($new_item_param as $key => $value)
         {
@@ -41,10 +43,18 @@ class NewsController extends Controller
             }
 
         }
+        $attachment= $request->file('attachment');
+        if($attachment){
+            $file_control= new FileController();
+            $path= $file_control->addNewsAttachment($attachment);
+            $new_item_param["attachment_path"]=$path;
+        }
+
         $new_item=NewsItem::create($new_item_param);
         return response()->json([
             "news"=> $new_item
         ],200);
+        
     }
 
     public function editNews(Request $request,$id){
