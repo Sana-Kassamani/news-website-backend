@@ -70,4 +70,20 @@ class NewsController extends Controller
         ]);
     }
 
+    public function deleteNews($id){
+        $news_item_to_delete = NewsItem::find($id);
+        
+        if(!$news_item_to_delete)
+        {
+            return response()->json([
+                "message"=> "News not found"
+            ],404);
+
+        }
+        $news_item_to_delete->delete();
+        return response()->json([
+            "message"=> "Deleted news"
+        ],200);
+    }
+
 }
