@@ -44,7 +44,7 @@ class NewsController extends Controller
         $new_item=NewsItem::create($new_item_param);
         return response()->json([
             "news"=> $new_item
-        ]);
+        ],200);
     }
 
     public function editNews(Request $request,$id){
@@ -67,7 +67,7 @@ class NewsController extends Controller
         $updated_news = $existing_news->update($item_param);
         return response()->json([
             "updated_news"=> $existing_news
-        ]);
+        ],200);
     }
 
     public function deleteNews($id){
