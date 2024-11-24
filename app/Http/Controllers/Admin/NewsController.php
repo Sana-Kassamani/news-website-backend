@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Attachment\FileController;
-
+use Exception;
 use App\Models\NewsItem;
 
 
@@ -49,7 +49,7 @@ class NewsController extends Controller
             $path= $file_control->addNewsAttachment($attachment);
             $new_item_param["attachment_path"]=$path;
         }
-
+        
         $new_item=NewsItem::create($new_item_param);
         return response()->json([
             "news"=> $new_item
@@ -73,7 +73,20 @@ class NewsController extends Controller
             "minimum_age"=> $request->minimum_age ? $request->minimum_age : $existing_news->minimum_age,
             "user_id"=> $request->user_id ? $request->user_id : $existing_news->user_id,
         ];
-
+        if($request->attachment){
+        {
+            $file_control= new FileController();
+            try {
+                $path=$file_control->editNewsAttachment($existing_news->attachmnet_path,$request->attachment);
+                $item_param["attachment_path"]=$path;
+            } catch (Exception $e) {
+                return response()->json([
+                    "message"=> "Edit news attachment failed",
+                    "error"=> $e->getMessage()
+                ],404);
+            }
+        }
+        }
         $updated_news = $existing_news->update($item_param);
         return response()->json([
             "updated_news"=> $existing_news
@@ -87,6 +100,18 @@ class NewsController extends Controller
             return response()->json([
                 "message"=> "News not found"
             ],404);
+        }
+        if($news_item_to_delete->attachment_path)
+        {
+            $file_control= new FileController();
+            try {
+                $file_control->deleteNewsAttachment($news_item_to_delete->attachment_path);
+            } catch (Exception $e) {
+                return response()->json([
+                    "message"=> "Deleted news attachment failed",
+                    "error"=> $e->getMessage()
+                ],404);
+            }
         }
         $news_item_to_delete->delete();
         return response()->json([
