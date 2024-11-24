@@ -10,19 +10,19 @@ use App\Models\NewsItem;
 
 class NewsController extends Controller
 {
-    public function getNews(){
-        $news = NewsItem::all();
-        if(!$news)
-        {
-            return response()->json([
-                "message"=> "No news yet"
-            ]);
+    // public function getNews(){
+    //     $news = NewsItem::all();
+    //     if(!$news)
+    //     {
+    //         return response()->json([
+    //             "message"=> "No news yet"
+    //         ]);
 
-        }
-        return response()->json([
-            "news"=> $news
-        ]);
-    }
+    //     }
+    //     return response()->json([
+    //         "news"=> $news
+    //     ]);
+    // }
 
 
     public function createNews(Request $request){
@@ -72,13 +72,11 @@ class NewsController extends Controller
 
     public function deleteNews($id){
         $news_item_to_delete = NewsItem::find($id);
-        
         if(!$news_item_to_delete)
         {
             return response()->json([
                 "message"=> "News not found"
             ],404);
-
         }
         $news_item_to_delete->delete();
         return response()->json([
